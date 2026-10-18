@@ -105,7 +105,7 @@
     renderedCount = total;
     const rowHeight = pageHeight();
     topSpacer.style.height = `${windowStart * rowHeight / columns()}px`;
-    bottomSpacer.style.height = `${Math.max(0, 1000) }px`;
+    bottomSpacer.style.height = "0px";
   }
   function initialRender() {
     const count = PAGE_SIZE * (BUFFER_PAGES + 1);
@@ -113,7 +113,7 @@
     requestAnimationFrame(() => {
       const rowHeight = pageHeight() / columns();
       topSpacer.style.height = "0px";
-      bottomSpacer.style.height = `${Math.max(1200, rowHeight * PAGE_SIZE)}px`;
+      bottomSpacer.style.height = "0px";
     });
   }
   function appendPage() {
@@ -129,8 +129,28 @@
       windowEl.appendChild(frag);
       renderedCount += PAGE_SIZE;
       const rowHeight = pageHeight() / columns();
-      bottomSpacer.style.height = `${Math.max(1200, rowHeight * PAGE_SIZE)}px`;
+      // No artificial blank runway: the next profiles sit immediately after
+      // the current feed. Recheck after layout because an observer does not
+      // fire again if its sentinel remains inside the same intersection area.
+      bottomSpacer.style.height = "0px";
       trimWindow();
+      requestAnimationFrame(ensureAhead);
+    });
+  }
+
+  function ensureAhead() {
+    if (scheduled) return;
+    const sentinelTop = $("sentinel").getBoundingClientRect().top;
+    if (sentinelTop < window.innerHeight + 1500) appendPage();
+  }
+
+  let scrollCheckPending = false;
+  function onScrollCheck() {
+    if (scrollCheckPending) return;
+    scrollCheckPending = true;
+    requestAnimationFrame(() => {
+      scrollCheckPending = false;
+      ensureAhead();
     });
   }
   function trimWindow() {
@@ -158,7 +178,7 @@
     windowStart = 0;
     windowEl.replaceChildren();
     topSpacer.style.height = "0px";
-    bottomSpacer.style.height = "1400px";
+    bottomSpacer.style.height = "0px";
     const count = PAGE_SIZE * (BUFFER_PAGES + 1);
     const frag = document.createDocumentFragment();
     for (let i = 0; i < count; i++) frag.appendChild(createCard(incrementDecimal(id, i)));
@@ -231,10 +251,10 @@
       if (entries.some(entry => entry.isIntersecting)) appendPage();
     }, { root: null, rootMargin: "1200px 0px", threshold: 0 });
     observer.observe($("sentinel"));
+    // Scroll-based safety net covers fast scrolling and observer edge cases.
+    window.addEventListener("scroll", onScrollCheck, { passive: true });
   } else {
-    window.addEventListener("scroll", () => {
-      if (window.innerHeight + window.scrollY > document.documentElement.scrollHeight - 1800) appendPage();
-    }, { passive: true });
+    window.addEventListener("scroll", onScrollCheck, { passive: true });
   }
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimer);
