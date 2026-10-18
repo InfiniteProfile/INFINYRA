@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#050507">
+  <meta name="description" content="INFINYRA — Infinite identities. Endless possibilities.">
+  <title>INFINYRA — Infinite identities</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="INFINYRA home"><span class="brand-mark">I</span><span>INFINYRA</span></a>
+    <div class="topbar-right">
+      <span class="live-indicator"><i></i> INFINITE NETWORK</span>
+      <button id="searchToggle" class="icon-button" type="button" aria-label="Search profiles" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.6"></circle><path d="m16 16 4.3 4.3"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <section id="searchPanel" class="search-panel" aria-hidden="true">
+    <form id="searchForm" class="search-form">
+      <label for="profileSearch">IDENTITY LOOKUP</label>
+      <div class="search-input-row">
+        <input id="profileSearch" inputmode="numeric" autocomplete="off" spellcheck="false"
+          placeholder="Enter any positive profile ID" aria-describedby="searchHint">
+        <button class="search-submit" type="submit">OPEN <span aria-hidden="true">↗</span></button>
+      </div>
+      <p id="searchHint" class="search-hint">Exact digits are preserved, even for extremely large identifiers.</p>
+      <p id="searchError" class="search-error" role="status"></p>
+    </form>
+  </section>
+
+  <main>
+    <section class="intro">
+      <div class="eyebrow"><span class="eyebrow-line"></span> A UNIVERSE OF IDENTITIES</div>
+      <h1>Every identity.<br><span>Without an end.</span></h1>
+      <p>Explore an ever-expanding network of unique digital identities.</p>
+      <div class="intro-meta"><span><b class="pulse-dot"></b> SYSTEM ONLINE</span><span class="meta-divider"></span><span>NO FINAL DESTINATION</span></div>
+    </section>
+
+    <div class="feed-heading"><span>DISCOVER IDENTITIES</span><span id="feedStatus">GENERATING LOCALLY <i></i></span></div>
+    <section id="feed" class="feed" aria-label="Infinite profile feed">
+      <div id="topSpacer" aria-hidden="true"></div>
+      <div id="profileWindow"></div>
+      <div id="bottomSpacer" aria-hidden="true"></div>
+    </section>
+    <div id="sentinel" aria-hidden="true"></div>
+  </main>
+
+  <div id="profileDialog" class="profile-dialog" hidden role="dialog" aria-modal="true" aria-labelledby="dialogName">
+    <button id="closeDialog" class="dialog-close" type="button" aria-label="Close profile">×</button>
+    <div id="dialogAvatar" class="dialog-avatar"></div>
+    <div class="dialog-eyebrow">IDENTITY RECORD</div>
+    <h2 id="dialogName"></h2>
+    <p id="dialogId" class="dialog-id"></p>
+    <div class="dialog-rule"></div>
+    <p class="dialog-note">Deterministically generated. Permanently addressable.</p>
+    <button id="copyId" class="copy-button" type="button">COPY PROFILE ID</button>
+    <span id="copyStatus" class="copy-status" role="status"></span>
+  </div>
+  <div id="dialogBackdrop" class="dialog-backdrop" hidden></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
